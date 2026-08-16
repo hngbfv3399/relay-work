@@ -1,0 +1,3 @@
+"use client";
+import { RefreshCw, TriangleAlert } from "lucide-react";
+export default function Error({ reset }: { error: Error; reset: () => void }) { return <main className="grid min-h-dvh place-items-center bg-[#f8fafc] p-5"><section className="max-w-md text-center"><span className="mx-auto grid size-16 place-items-center rounded-3xl bg-rose-50 text-rose-600"><TriangleAlert className="size-8" /></span><h1 className="mt-6 text-2xl font-bold">화면을 불러오지 못했어요.</h1><p className="mt-3 text-sm leading-6 text-slate-500">잠시 후 다시 시도해주세요. 문제가 계속되면 팀 관리자에게 알려주세요.</p><button onClick={reset} className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-[#1d4ed8] px-4 text-sm font-semibold text-white"><RefreshCw className="size-4" /> 다시 시도</button></section></main>; }

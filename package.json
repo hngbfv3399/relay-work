@@ -1,0 +1,13 @@
+{
+  "name": "relay-work",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter @relay-work/web dev",
+    "dev:api": "pnpm --filter @relay-work/api start:dev",
+    "build": "pnpm --filter @relay-work/web build && pnpm --filter @relay-work/api build",
+    "lint": "pnpm --filter @relay-work/web lint && pnpm --filter @relay-work/api lint",
+    "prisma:generate": "pnpm --filter @relay-work/api prisma:generate"
+  },
+  "packageManager": "pnpm@10.31.0"
+}

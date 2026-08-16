@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum AudienceType {
+  TEAM
+  SELECTED
+}
+
+enum CompletionStatus {
+  INCOMPLETE
+  COMPLETE
+}
+
+enum AudienceTargetType {
+  MEMBER
+  ROLE
+}
+
+model User {
+  id          String       @id
+  name        String
+  memberships TeamMember[]
+  createdAt   DateTime     @default(now())
+}
+
+model Team {
+  id         String         @id @default(cuid())
+  name       String
+  description String?
+  members    TeamMember[]
+  roles      TeamRole[]
+  categories TeamCategory[]
+  items      Item[]
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+model TeamMember {
+  id         String           @id @default(cuid())
+  teamId     String
+  userId     String
+  isOwner    Boolean          @default(false)
+  isActive   Boolean          @default(true)
+  joinedAt   DateTime         @default(now())
+  leftAt     DateTime?
+  team       Team             @relation(fields: [teamId], references: [id])
+  user       User             @relation(fields: [userId], references: [id])
+  roles      TeamMemberRole[]
+  authoredItems Item[]        @relation("ItemAuthor")
+  reads      ItemRead[]
+  memberAudiences ItemAudience[] @relation("AudienceMember")
+
+  @@unique([teamId, userId])
+  @@index([teamId, isActive])
+}
+
+model TeamRole {
+  id          String           @id @default(cuid())
+  teamId      String
+  name        String
+  permissions String           @default("[]")
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  team        Team             @relation(fields: [teamId], references: [id])
+  members     TeamMemberRole[]
+  roleAudiences ItemAudience[] @relation("AudienceRole")
+
+  @@unique([teamId, name])
+  @@index([teamId, isActive])
+}
+
+model TeamMemberRole {
+  teamMemberId String
+  roleId       String
+  teamMember   TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
+  role         TeamRole   @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([teamMemberId, roleId])
+  @@index([roleId])
+}
+
+model TeamCategory {
+  id        String   @id @default(cuid())
+  teamId    String
+  name      String
+  sortOrder Int      @default(0)
+  isDefault Boolean  @default(false)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  team      Team     @relation(fields: [teamId], references: [id])
+  items     Item[]
+
+  @@unique([teamId, name])
+  @@index([teamId, isActive, sortOrder])
+}
+
+model Item {
+  id                 String            @id @default(cuid())
+  teamId             String
+  categoryId         String
+  authorMemberId     String
+  title              String
+  content            String
+  isImportant        Boolean           @default(false)
+  audienceType       AudienceType      @default(TEAM)
+  requiresCompletion Boolean           @default(false)
+  completionStatus   CompletionStatus?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  team               Team              @relation(fields: [teamId], references: [id])
+  category           TeamCategory      @relation(fields: [categoryId], references: [id])
+  author             TeamMember        @relation("ItemAuthor", fields: [authorMemberId], references: [id])
+  audiences          ItemAudience[]
+  reads              ItemRead[]
+
+  @@index([teamId, createdAt])
+  @@index([teamId, categoryId, createdAt])
+  @@index([teamId, isImportant, createdAt])
+}
+
+model ItemAudience {
+  id             String             @id @default(cuid())
+  itemId         String
+  targetType     AudienceTargetType
+  targetMemberId String?
+  targetRoleId   String?
+  item           Item               @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  targetMember   TeamMember?        @relation("AudienceMember", fields: [targetMemberId], references: [id])
+  targetRole     TeamRole?          @relation("AudienceRole", fields: [targetRoleId], references: [id])
+
+  @@index([itemId])
+  @@index([targetMemberId])
+  @@index([targetRoleId])
+}
+
+model ItemRead {
+  id           String     @id @default(cuid())
+  itemId       String
+  teamMemberId String
+  readAt       DateTime   @default(now())
+  item         Item       @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  teamMember   TeamMember @relation(fields: [teamMemberId], references: [id])
+
+  @@unique([itemId, teamMemberId])
+  @@index([teamMemberId, readAt])
+}
