@@ -1,3 +1,21 @@
 import { UserPlus, Users } from "lucide-react";
 import AppShell from "@/components/AppShell";
-export default function EmptyMembersPage() { return <AppShell title="팀원"><section className="mx-auto flex min-h-[55dvh] max-w-lg flex-col items-center justify-center text-center"><span className="grid size-16 place-items-center rounded-3xl bg-violet-50 text-violet-600"><Users className="size-8" /></span><h2 className="mt-6 text-2xl font-bold">함께할 팀원을 초대하세요.</h2><p className="mt-3 text-sm leading-6 text-slate-500">팀원을 추가하면 전달사항을 선택적으로 공유하고 읽음·완료 상태를 함께 확인할 수 있어요.</p><button className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-[#1d4ed8] px-4 text-sm font-semibold text-white"><UserPlus className="size-4" /> 팀원 초대</button></section></AppShell>; }
+export default function EmptyMembersPage() {
+  return (
+    <AppShell title="팀원">
+      <section className="mx-auto flex min-h-[55dvh] max-w-lg flex-col items-center justify-center text-center">
+        <span className="grid size-16 place-items-center rounded-3xl bg-violet-50 text-violet-600">
+          <Users className="size-8" />
+        </span>
+        <h2 className="mt-6 text-2xl font-bold">함께할 팀원을 초대하세요.</h2>
+        <p className="mt-3 text-sm leading-6 text-slate-500">
+          팀원을 추가하면 전달사항을 선택적으로 공유하고 읽음·완료 상태를 함께
+          확인할 수 있어요.
+        </p>
+        <button className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-[#1d4ed8] px-4 text-sm font-semibold text-white">
+          <UserPlus className="size-4" /> 팀원 초대
+        </button>
+      </section>
+    </AppShell>
+  );
+}

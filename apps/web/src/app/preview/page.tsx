@@ -1,21 +1,402 @@
-import { Bell, Check, CheckCircle2, ChevronRight, CircleAlert, Code2, Database, FileJson, Filter, FolderKanban, Mail, Plus, Search, ServerCrash, Star, Users } from "lucide-react";
+import {
+  Bell,
+  Check,
+  CheckCircle2,
+  ChevronRight,
+  CircleAlert,
+  Code2,
+  Database,
+  FileJson,
+  Filter,
+  FolderKanban,
+  Mail,
+  Plus,
+  Search,
+  ServerCrash,
+  Star,
+  Users,
+} from "lucide-react";
 import AppShell from "@/components/AppShell";
 
 const payloads = [
-  { method: "GET", path: "/teams/:teamId/home", label: "팀 홈", tone: "text-blue-700 bg-blue-50", json: `{"data":{"unreadCount":6,"importantCount":3,"incompleteCount":4}}`, state: "success" },
-  { method: "GET", path: "/teams/:teamId/items", label: "전달사항 목록", tone: "text-violet-700 bg-violet-50", json: `{"data":[{"title":"행사 부스 운영 인력 확인","isImportant":true,"completionStatus":"INCOMPLETE","readAt":null}],"meta":{"nextCursor":null,"hasNextPage":false}}`, state: "success" },
-  { method: "GET", path: "/teams/:teamId/items", label: "빈 전달사항", tone: "text-slate-700 bg-slate-100", json: `{"data":[],"meta":{"nextCursor":null,"hasNextPage":false}}`, state: "empty" },
-  { method: "POST", path: "/teams/:teamId/items", label: "권한 오류", tone: "text-rose-700 bg-rose-50", json: `{"error":{"code":"PERMISSION_DENIED","message":"이 작업을 수행할 권한이 없습니다."}}`, state: "error" },
+  {
+    method: "GET",
+    path: "/teams/:teamId/home",
+    label: "팀 홈",
+    tone: "text-blue-700 bg-blue-50",
+    json: `{"data":{"unreadCount":6,"importantCount":3,"incompleteCount":4}}`,
+    state: "success",
+  },
+  {
+    method: "GET",
+    path: "/teams/:teamId/items",
+    label: "전달사항 목록",
+    tone: "text-violet-700 bg-violet-50",
+    json: `{"data":[{"title":"행사 부스 운영 인력 확인","isImportant":true,"completionStatus":"INCOMPLETE","readAt":null}],"meta":{"nextCursor":null,"hasNextPage":false}}`,
+    state: "success",
+  },
+  {
+    method: "GET",
+    path: "/teams/:teamId/items",
+    label: "빈 전달사항",
+    tone: "text-slate-700 bg-slate-100",
+    json: `{"data":[],"meta":{"nextCursor":null,"hasNextPage":false}}`,
+    state: "empty",
+  },
+  {
+    method: "POST",
+    path: "/teams/:teamId/items",
+    label: "권한 오류",
+    tone: "text-rose-700 bg-rose-50",
+    json: `{"error":{"code":"PERMISSION_DENIED","message":"이 작업을 수행할 권한이 없습니다."}}`,
+    state: "error",
+  },
 ];
 
-export default function PreviewPage() { return <AppShell title="UI 데이터 프리뷰" eyebrow="디자인 QA 전용"><section className="rounded-3xl bg-[#173c8b] p-6 text-white sm:p-8"><div className="flex flex-wrap items-start justify-between gap-4"><div><p className="text-sm font-semibold text-blue-200">Relay Work · UI QA</p><h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">API 응답별 화면 표현을 한곳에서 확인하세요.</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-blue-100">백엔드 연결 전에는 목업 데이터로, 연결 후에는 실제 응답과 비교하며 카드·빈 상태·오류 문구를 검토할 수 있습니다.</p></div><Code2 className="size-8 text-blue-200" /></div></section>
-  <section className="mt-8 grid gap-4 sm:grid-cols-3"><Metric icon={<Database className="size-5" />} label="성공 응답" value="2" color="text-blue-600 bg-blue-50" /><Metric icon={<FileJson className="size-5" />} label="빈 결과" value="1" color="text-slate-600 bg-slate-100" /><Metric icon={<CircleAlert className="size-5" />} label="오류 응답" value="1" color="text-rose-600 bg-rose-50" /></section>
-  <section className="mt-9"><div className="flex items-end justify-between"><div><h2 className="text-xl font-bold">응답 → UI 매핑</h2><p className="mt-1 text-sm text-slate-500">API 명세의 공통 성공·오류 형식을 기준으로 구성했습니다.</p></div><span className="hidden rounded-lg bg-slate-100 px-3 py-2 text-xs text-slate-500 sm:block">정적 디자인 프리뷰</span></div><div className="mt-5 grid gap-4 xl:grid-cols-2">{payloads.map(item => <article key={item.label} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><header className="flex items-center justify-between border-b border-slate-100 px-4 py-3"><div className="flex items-center gap-2"><span className={`rounded-md px-2 py-1 text-[11px] font-bold ${item.method === "POST" ? "bg-emerald-50 text-emerald-700" : "bg-blue-50 text-blue-700"}`}>{item.method}</span><code className="text-xs text-slate-500">{item.path}</code></div><span className={`rounded-full px-2 py-1 text-xs font-semibold ${item.tone}`}>{item.label}</span></header><div className="grid md:grid-cols-2"><pre className="overflow-x-auto bg-slate-950 p-4 text-[11px] leading-5 text-slate-200"><code>{item.json}</code></pre><div className="flex min-h-36 items-center justify-center p-4"><UiResponse state={item.state} /></div></div></article>)}</div></section>
-  <section className="mt-9 rounded-2xl border border-slate-200 bg-white p-5"><h2 className="font-bold">검토 체크리스트</h2><div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{["성공 데이터의 정보 우선순위", "빈 결과의 다음 행동", "권한 오류 안내 문구", "로딩 중 레이아웃 유지"].map(text => <div key={text} className="flex items-center gap-2 text-sm text-slate-600"><CheckCircle2 className="size-4 text-emerald-600" />{text}</div>)}</div></section>
-  <section className="mt-9"><h2 className="text-xl font-bold">전체 UI 카탈로그</h2><p className="mt-1 text-sm text-slate-500">모든 라우트에서 사용하는 화면 요소를 이곳에서 함께 확인합니다.</p><div className="mt-5 grid gap-4 lg:grid-cols-2"><Catalog title="내비게이션 · 팀 선택"><div className="flex items-center gap-2 rounded-xl border border-slate-200 p-3"><span className="grid size-8 place-items-center rounded-lg bg-blue-700 font-bold text-white">R</span><b className="text-sm">Relay Work</b><span className="ml-auto grid size-8 place-items-center rounded-full bg-violet-400 text-xs text-white">김</span></div><div className="mt-3 flex gap-2"><Team mark="R" name="리워크 디자인팀" /><Team mark="F" name="가을 행사 운영팀" /></div></Catalog><Catalog title="버튼 · 입력 · 필터"><div className="flex flex-wrap gap-2"><button className="inline-flex h-10 items-center gap-2 rounded-xl bg-blue-700 px-3 text-sm font-semibold text-white"><Plus className="size-4" /> 전달사항 작성</button><button className="h-10 rounded-xl border border-slate-200 px-3 text-sm font-medium">취소</button><button className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-3 text-sm"><Filter className="size-4" /> 필터</button></div><div className="relative mt-3"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" /><input placeholder="전달사항 검색" className="h-10 w-full rounded-xl border border-slate-200 pl-9 text-sm" /></div><div className="mt-3 flex gap-2">{["전체", "미읽음", "중요"].map((x,i)=><span key={x} className={`rounded-lg px-3 py-2 text-xs font-medium ${i === 0 ? "bg-blue-800 text-white" : "bg-slate-100 text-slate-600"}`}>{x}</span>)}</div></Catalog><Catalog title="전달사항 카드 · 상태"><div className="rounded-xl border border-slate-200 p-4"><div className="flex gap-2"><span className="rounded bg-blue-50 px-2 py-1 text-xs text-blue-700">요청</span><span className="flex items-center gap-1 text-xs text-amber-600"><Star className="size-3 fill-current" /> 중요</span><span className="ml-auto rounded bg-rose-50 px-2 py-1 text-xs text-rose-700">미완료</span></div><b className="mt-3 block text-sm">행사 부스 운영 인력 확인</b><p className="mt-1 text-xs text-slate-500">이수진 · 10분 전 · 미읽음</p></div><div className="mt-3 flex gap-3 text-xs"><span className="rounded bg-emerald-50 px-2 py-1 text-emerald-700"><Check className="mr-1 inline size-3" />완료</span><span className="rounded bg-violet-50 px-2 py-1 text-violet-700">공지</span><span className="rounded bg-rose-50 px-2 py-1 text-rose-700">오류</span></div></Catalog><Catalog title="홈 대시보드 · 팀원"><div className="grid grid-cols-3 gap-2">{[["읽지 않음","6"],["중요","3"],["미완료","4"]].map(([a,b])=><div key={a} className="rounded-xl bg-slate-50 p-3"><span className="text-[10px] text-slate-500">{a}</span><b className="mt-2 block text-xl">{b}</b></div>)}</div><div className="mt-4 space-y-2">{[["김","김지호","OWNER","bg-violet-400"],["이","이수진","운영 관리자","bg-rose-400"]].map(([a,b,c,d])=><div key={b} className="flex items-center gap-2"><span className={`grid size-7 place-items-center rounded-full ${d} text-[10px] text-white`}>{a}</span><span className="flex-1 text-xs font-medium">{b}</span><span className="text-[10px] text-slate-500">{c}</span></div>)}</div></Catalog><Catalog title="폼 · 설정 항목"><label className="block text-xs font-semibold">팀 이름<input value="리워크 디자인팀" readOnly className="mt-2 h-10 w-full rounded-xl border border-slate-200 px-3 text-sm font-normal" /></label><label className="mt-3 block text-xs font-semibold">내용<textarea readOnly value="상세 내용, 기한, 필요한 행동을 작성해주세요." className="mt-2 min-h-16 w-full rounded-xl border border-slate-200 p-3 text-xs font-normal" /></label><div className="mt-3 flex items-center gap-3 rounded-xl bg-slate-50 p-3"><FolderKanban className="size-4 text-blue-700" /><span className="flex-1 text-xs font-medium">카테고리 관리</span><ChevronRight className="size-4 text-slate-400" /></div></Catalog><Catalog title="상태 · 피드백"><div className="grid grid-cols-2 gap-2"><MiniState icon={<Bell />} title="로딩" text="스켈레톤 유지" /><MiniState icon={<Users />} title="빈 상태" text="첫 항목 작성" /><MiniState icon={<CircleAlert />} title="오류" text="다시 시도" /><MiniState icon={<Mail />} title="초대" text="팀원 추가" /></div></Catalog></div></section>
-</AppShell>; }
-function Catalog({ title, children }: { title: string; children: React.ReactNode }) { return <article className="rounded-2xl border border-slate-200 bg-white p-5"><h3 className="mb-4 text-sm font-bold">{title}</h3>{children}</article>; }
-function Team({ mark, name }: { mark: string; name: string }) { return <div className="min-w-0 flex-1 rounded-xl border border-slate-200 p-3"><span className="grid size-7 place-items-center rounded-lg bg-blue-600 text-xs font-bold text-white">{mark}</span><p className="mt-3 truncate text-xs font-semibold">{name}</p><p className="mt-1 text-[10px] text-slate-500">12명의 팀원</p></div>; }
-function MiniState({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) { return <div className="rounded-xl bg-slate-50 p-3"><span className="text-slate-400">{icon}</span><b className="mt-2 block text-xs">{title}</b><span className="text-[10px] text-slate-500">{text}</span></div>; }
-function Metric({ icon, label, value, color }: { icon: React.ReactNode; label: string; value: string; color: string }) { return <div className="rounded-2xl border border-slate-200 bg-white p-4"><span className={`grid size-9 place-items-center rounded-xl ${color}`}>{icon}</span><p className="mt-4 text-xs text-slate-500">{label}</p><strong className="text-2xl">{value}</strong><span className="ml-1 text-sm text-slate-400">개</span></div>; }
-function UiResponse({ state }: { state: string }) { if (state === "empty") return <div className="text-center"><Users className="mx-auto size-7 text-slate-300" /><p className="mt-2 text-sm font-semibold">전달사항이 없어요</p><button className="mt-2 text-xs font-semibold text-blue-700">첫 전달사항 작성</button></div>; if (state === "error") return <div className="text-center"><ServerCrash className="mx-auto size-7 text-rose-400" /><p className="mt-2 text-sm font-semibold text-rose-700">권한이 없습니다</p><p className="mt-1 text-xs text-slate-500">팀 관리자에게 문의하세요.</p></div>; return <div className="w-full rounded-xl border border-slate-100 p-3"><span className="rounded-md bg-blue-50 px-1.5 py-1 text-[10px] text-blue-700">요청</span><p className="mt-2 text-sm font-semibold">행사 부스 운영 인력 확인</p><p className="mt-1 text-xs text-slate-500">미읽음 · 미완료</p></div>; }
+export default function PreviewPage() {
+  return (
+    <AppShell title="UI 데이터 프리뷰" eyebrow="디자인 QA 전용">
+      <section className="rounded-3xl bg-[#173c8b] p-6 text-white sm:p-8">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-blue-200">
+              Relay Work · UI QA
+            </p>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
+              API 응답별 화면 표현을 한곳에서 확인하세요.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-blue-100">
+              백엔드 연결 전에는 목업 데이터로, 연결 후에는 실제 응답과 비교하며
+              카드·빈 상태·오류 문구를 검토할 수 있습니다.
+            </p>
+          </div>
+          <Code2 className="size-8 text-blue-200" />
+        </div>
+      </section>
+      <section className="mt-8 grid gap-4 sm:grid-cols-3">
+        <Metric
+          icon={<Database className="size-5" />}
+          label="성공 응답"
+          value="2"
+          color="text-blue-600 bg-blue-50"
+        />
+        <Metric
+          icon={<FileJson className="size-5" />}
+          label="빈 결과"
+          value="1"
+          color="text-slate-600 bg-slate-100"
+        />
+        <Metric
+          icon={<CircleAlert className="size-5" />}
+          label="오류 응답"
+          value="1"
+          color="text-rose-600 bg-rose-50"
+        />
+      </section>
+      <section className="mt-9">
+        <div className="flex items-end justify-between">
+          <div>
+            <h2 className="text-xl font-bold">응답 → UI 매핑</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              API 명세의 공통 성공·오류 형식을 기준으로 구성했습니다.
+            </p>
+          </div>
+          <span className="hidden rounded-lg bg-slate-100 px-3 py-2 text-xs text-slate-500 sm:block">
+            정적 디자인 프리뷰
+          </span>
+        </div>
+        <div className="mt-5 grid gap-4 xl:grid-cols-2">
+          {payloads.map((item) => (
+            <article
+              key={item.label}
+              className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+            >
+              <header className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`rounded-md px-2 py-1 text-[11px] font-bold ${item.method === "POST" ? "bg-emerald-50 text-emerald-700" : "bg-blue-50 text-blue-700"}`}
+                  >
+                    {item.method}
+                  </span>
+                  <code className="text-xs text-slate-500">{item.path}</code>
+                </div>
+                <span
+                  className={`rounded-full px-2 py-1 text-xs font-semibold ${item.tone}`}
+                >
+                  {item.label}
+                </span>
+              </header>
+              <div className="grid md:grid-cols-2">
+                <pre className="overflow-x-auto bg-slate-950 p-4 text-[11px] leading-5 text-slate-200">
+                  <code>{item.json}</code>
+                </pre>
+                <div className="flex min-h-36 items-center justify-center p-4">
+                  <UiResponse state={item.state} />
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="mt-9 rounded-2xl border border-slate-200 bg-white p-5">
+        <h2 className="font-bold">검토 체크리스트</h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            "성공 데이터의 정보 우선순위",
+            "빈 결과의 다음 행동",
+            "권한 오류 안내 문구",
+            "로딩 중 레이아웃 유지",
+          ].map((text) => (
+            <div
+              key={text}
+              className="flex items-center gap-2 text-sm text-slate-600"
+            >
+              <CheckCircle2 className="size-4 text-emerald-600" />
+              {text}
+            </div>
+          ))}
+        </div>
+      </section>
+      <section className="mt-9">
+        <h2 className="text-xl font-bold">전체 UI 카탈로그</h2>
+        <p className="mt-1 text-sm text-slate-500">
+          모든 라우트에서 사용하는 화면 요소를 이곳에서 함께 확인합니다.
+        </p>
+        <div className="mt-5 grid gap-4 lg:grid-cols-2">
+          <Catalog title="내비게이션 · 팀 선택">
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 p-3">
+              <span className="grid size-8 place-items-center rounded-lg bg-blue-700 font-bold text-white">
+                R
+              </span>
+              <b className="text-sm">Relay Work</b>
+              <span className="ml-auto grid size-8 place-items-center rounded-full bg-violet-400 text-xs text-white">
+                김
+              </span>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <Team mark="R" name="리워크 디자인팀" />
+              <Team mark="F" name="가을 행사 운영팀" />
+            </div>
+          </Catalog>
+          <Catalog title="버튼 · 입력 · 필터">
+            <div className="flex flex-wrap gap-2">
+              <button className="inline-flex h-10 items-center gap-2 rounded-xl bg-blue-700 px-3 text-sm font-semibold text-white">
+                <Plus className="size-4" /> 전달사항 작성
+              </button>
+              <button className="h-10 rounded-xl border border-slate-200 px-3 text-sm font-medium">
+                취소
+              </button>
+              <button className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-3 text-sm">
+                <Filter className="size-4" /> 필터
+              </button>
+            </div>
+            <div className="relative mt-3">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+              <input
+                placeholder="전달사항 검색"
+                className="h-10 w-full rounded-xl border border-slate-200 pl-9 text-sm"
+              />
+            </div>
+            <div className="mt-3 flex gap-2">
+              {["전체", "미읽음", "중요"].map((x, i) => (
+                <span
+                  key={x}
+                  className={`rounded-lg px-3 py-2 text-xs font-medium ${i === 0 ? "bg-blue-800 text-white" : "bg-slate-100 text-slate-600"}`}
+                >
+                  {x}
+                </span>
+              ))}
+            </div>
+          </Catalog>
+          <Catalog title="전달사항 카드 · 상태">
+            <div className="rounded-xl border border-slate-200 p-4">
+              <div className="flex gap-2">
+                <span className="rounded bg-blue-50 px-2 py-1 text-xs text-blue-700">
+                  요청
+                </span>
+                <span className="flex items-center gap-1 text-xs text-amber-600">
+                  <Star className="size-3 fill-current" /> 중요
+                </span>
+                <span className="ml-auto rounded bg-rose-50 px-2 py-1 text-xs text-rose-700">
+                  미완료
+                </span>
+              </div>
+              <b className="mt-3 block text-sm">행사 부스 운영 인력 확인</b>
+              <p className="mt-1 text-xs text-slate-500">
+                이수진 · 10분 전 · 미읽음
+              </p>
+            </div>
+            <div className="mt-3 flex gap-3 text-xs">
+              <span className="rounded bg-emerald-50 px-2 py-1 text-emerald-700">
+                <Check className="mr-1 inline size-3" />
+                완료
+              </span>
+              <span className="rounded bg-violet-50 px-2 py-1 text-violet-700">
+                공지
+              </span>
+              <span className="rounded bg-rose-50 px-2 py-1 text-rose-700">
+                오류
+              </span>
+            </div>
+          </Catalog>
+          <Catalog title="홈 대시보드 · 팀원">
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                ["읽지 않음", "6"],
+                ["중요", "3"],
+                ["미완료", "4"],
+              ].map(([a, b]) => (
+                <div key={a} className="rounded-xl bg-slate-50 p-3">
+                  <span className="text-[10px] text-slate-500">{a}</span>
+                  <b className="mt-2 block text-xl">{b}</b>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 space-y-2">
+              {[
+                ["김", "김지호", "OWNER", "bg-violet-400"],
+                ["이", "이수진", "운영 관리자", "bg-rose-400"],
+              ].map(([a, b, c, d]) => (
+                <div key={b} className="flex items-center gap-2">
+                  <span
+                    className={`grid size-7 place-items-center rounded-full ${d} text-[10px] text-white`}
+                  >
+                    {a}
+                  </span>
+                  <span className="flex-1 text-xs font-medium">{b}</span>
+                  <span className="text-[10px] text-slate-500">{c}</span>
+                </div>
+              ))}
+            </div>
+          </Catalog>
+          <Catalog title="폼 · 설정 항목">
+            <label className="block text-xs font-semibold">
+              팀 이름
+              <input
+                value="리워크 디자인팀"
+                readOnly
+                className="mt-2 h-10 w-full rounded-xl border border-slate-200 px-3 text-sm font-normal"
+              />
+            </label>
+            <label className="mt-3 block text-xs font-semibold">
+              내용
+              <textarea
+                readOnly
+                value="상세 내용, 기한, 필요한 행동을 작성해주세요."
+                className="mt-2 min-h-16 w-full rounded-xl border border-slate-200 p-3 text-xs font-normal"
+              />
+            </label>
+            <div className="mt-3 flex items-center gap-3 rounded-xl bg-slate-50 p-3">
+              <FolderKanban className="size-4 text-blue-700" />
+              <span className="flex-1 text-xs font-medium">카테고리 관리</span>
+              <ChevronRight className="size-4 text-slate-400" />
+            </div>
+          </Catalog>
+          <Catalog title="상태 · 피드백">
+            <div className="grid grid-cols-2 gap-2">
+              <MiniState icon={<Bell />} title="로딩" text="스켈레톤 유지" />
+              <MiniState icon={<Users />} title="빈 상태" text="첫 항목 작성" />
+              <MiniState icon={<CircleAlert />} title="오류" text="다시 시도" />
+              <MiniState icon={<Mail />} title="초대" text="팀원 추가" />
+            </div>
+          </Catalog>
+        </div>
+      </section>
+    </AppShell>
+  );
+}
+function Catalog({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <article className="rounded-2xl border border-slate-200 bg-white p-5">
+      <h3 className="mb-4 text-sm font-bold">{title}</h3>
+      {children}
+    </article>
+  );
+}
+function Team({ mark, name }: { mark: string; name: string }) {
+  return (
+    <div className="min-w-0 flex-1 rounded-xl border border-slate-200 p-3">
+      <span className="grid size-7 place-items-center rounded-lg bg-blue-600 text-xs font-bold text-white">
+        {mark}
+      </span>
+      <p className="mt-3 truncate text-xs font-semibold">{name}</p>
+      <p className="mt-1 text-[10px] text-slate-500">12명의 팀원</p>
+    </div>
+  );
+}
+function MiniState({
+  icon,
+  title,
+  text,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="rounded-xl bg-slate-50 p-3">
+      <span className="text-slate-400">{icon}</span>
+      <b className="mt-2 block text-xs">{title}</b>
+      <span className="text-[10px] text-slate-500">{text}</span>
+    </div>
+  );
+}
+function Metric({
+  icon,
+  label,
+  value,
+  color,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  color: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-4">
+      <span className={`grid size-9 place-items-center rounded-xl ${color}`}>
+        {icon}
+      </span>
+      <p className="mt-4 text-xs text-slate-500">{label}</p>
+      <strong className="text-2xl">{value}</strong>
+      <span className="ml-1 text-sm text-slate-400">개</span>
+    </div>
+  );
+}
+function UiResponse({ state }: { state: string }) {
+  if (state === "empty")
+    return (
+      <div className="text-center">
+        <Users className="mx-auto size-7 text-slate-300" />
+        <p className="mt-2 text-sm font-semibold">전달사항이 없어요</p>
+        <button className="mt-2 text-xs font-semibold text-blue-700">
+          첫 전달사항 작성
+        </button>
+      </div>
+    );
+  if (state === "error")
+    return (
+      <div className="text-center">
+        <ServerCrash className="mx-auto size-7 text-rose-400" />
+        <p className="mt-2 text-sm font-semibold text-rose-700">
+          권한이 없습니다
+        </p>
+        <p className="mt-1 text-xs text-slate-500">팀 관리자에게 문의하세요.</p>
+      </div>
+    );
+  return (
+    <div className="w-full rounded-xl border border-slate-100 p-3">
+      <span className="rounded-md bg-blue-50 px-1.5 py-1 text-[10px] text-blue-700">
+        요청
+      </span>
+      <p className="mt-2 text-sm font-semibold">행사 부스 운영 인력 확인</p>
+      <p className="mt-1 text-xs text-slate-500">미읽음 · 미완료</p>
+    </div>
+  );
+}

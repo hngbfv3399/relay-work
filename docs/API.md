@@ -7,23 +7,24 @@ Base URL: `http://localhost:4000`
 
 ## 화면별 API
 
-| 화면/기능 | 메서드·경로 | 핵심 입력 |
-| --- | --- | --- |
-| 첫 사용자 등록 | `POST /auth/demo-users` | `{ "name": "지호" }` |
-| 팀 선택 | `GET /teams` | - |
-| 팀 홈 | `GET /teams/:teamId/home` | - |
-| 팀 정보 | `GET`, `PATCH /teams/:teamId` | 이름, 설명 |
-| 팀원 | `GET`, `POST /teams/:teamId/members` | `POST`: `userId` |
-| 팀원 제외 | `DELETE /teams/:teamId/members/:memberId` | - |
-| 카테고리 | `GET`, `POST /teams/:teamId/categories` | 이름, 순서 |
-| 카테고리 수정/비활성화 | `PATCH`, `DELETE /teams/:teamId/categories/:categoryId` | 이름, 순서, 활성 여부 |
-| 역할 | `GET`, `POST /teams/:teamId/roles` | 이름, 권한 목록 |
-| 역할 수정/비활성화 | `PATCH`, `DELETE /teams/:teamId/roles/:roleId` | 이름, 권한, 활성 여부 |
-| 역할 부여 | `PATCH /teams/:teamId/members/:memberId/roles` | `{ "roleIds": [] }` |
-| 전달사항 목록/생성 | `GET`, `POST /teams/:teamId/items` | 아래 참조 |
-| 전달사항 상세/수정/삭제 | `GET`, `PATCH`, `DELETE /items/:itemId` | `DELETE`는 204 |
-| 완료 상태 | `PATCH /items/:itemId/completion` | `{ "completionStatus": "INCOMPLETE" \| "COMPLETE" }` |
-| 읽음 | `POST /items/:itemId/read`, `GET /items/:itemId/reads` | - |
+| 화면/기능               | 메서드·경로                                             | 핵심 입력                                            |
+| ----------------------- | ------------------------------------------------------- | ---------------------------------------------------- |
+| 첫 사용자 등록          | `POST /auth/demo-users`                                 | `{ "name": "지호" }`                                 |
+| 현재 사용자 확인        | `GET /auth/me`                                          | `x-demo-user-id` 헤더                                |
+| 팀 선택                 | `GET /teams`                                            | -                                                    |
+| 팀 홈                   | `GET /teams/:teamId/home`                               | -                                                    |
+| 팀 정보                 | `GET`, `PATCH /teams/:teamId`                           | 이름, 설명                                           |
+| 팀원                    | `GET`, `POST /teams/:teamId/members`                    | `POST`: `userId`                                     |
+| 팀원 제외               | `DELETE /teams/:teamId/members/:memberId`               | -                                                    |
+| 카테고리                | `GET`, `POST /teams/:teamId/categories`                 | 이름, 순서                                           |
+| 카테고리 수정/비활성화  | `PATCH`, `DELETE /teams/:teamId/categories/:categoryId` | 이름, 순서, 활성 여부                                |
+| 역할                    | `GET`, `POST /teams/:teamId/roles`                      | 이름, 권한 목록                                      |
+| 역할 수정/비활성화      | `PATCH`, `DELETE /teams/:teamId/roles/:roleId`          | 이름, 권한, 활성 여부                                |
+| 역할 부여               | `PATCH /teams/:teamId/members/:memberId/roles`          | `{ "roleIds": [] }`                                  |
+| 전달사항 목록/생성      | `GET`, `POST /teams/:teamId/items`                      | 아래 참조                                            |
+| 전달사항 상세/수정/삭제 | `GET`, `PATCH`, `DELETE /items/:itemId`                 | `DELETE`는 204                                       |
+| 완료 상태               | `PATCH /items/:itemId/completion`                       | `{ "completionStatus": "INCOMPLETE" \| "COMPLETE" }` |
+| 읽음                    | `POST /items/:itemId/read`, `GET /items/:itemId/reads`  | -                                                    |
 
 ## 전달사항 생성·수정
 
@@ -50,14 +51,14 @@ Base URL: `http://localhost:4000`
 
 `GET /teams/:teamId/items`는 다음을 조합해 사용할 수 있다.
 
-| 파라미터 | 값 |
-| --- | --- |
-| `cursor`, `limit` | 커서, 1~50개 (기본 20) |
-| `categoryId` | 카테고리 ID |
-| `isImportant` | `true` / `false` |
-| `unreadOnly` | `true` / `false` |
-| `completionStatus` | `INCOMPLETE` / `COMPLETE` |
-| `keyword` | 제목·본문 검색어 |
-| `createdFrom`, `createdTo` | ISO 8601 일시 |
+| 파라미터                   | 값                        |
+| -------------------------- | ------------------------- |
+| `cursor`, `limit`          | 커서, 1~50개 (기본 20)    |
+| `categoryId`               | 카테고리 ID               |
+| `isImportant`              | `true` / `false`          |
+| `unreadOnly`               | `true` / `false`          |
+| `completionStatus`         | `INCOMPLETE` / `COMPLETE` |
+| `keyword`                  | 제목·본문 검색어          |
+| `createdFrom`, `createdTo` | ISO 8601 일시             |
 
 접근 권한이 없는 제한 전달사항은 목록·상세·읽음 API 모두에서 숨겨진다.

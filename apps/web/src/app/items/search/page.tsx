@@ -1,3 +1,66 @@
 import { Search, X } from "lucide-react";
 import AppShell from "@/components/AppShell";
-export default function SearchPage() { return <AppShell title="검색 및 필터"><div className="grid gap-6 lg:grid-cols-[280px_1fr]"><aside className="rounded-2xl border border-slate-200 bg-white p-5"><div className="flex items-center justify-between"><h2 className="font-bold">상세 필터</h2><button className="text-xs text-blue-700">초기화</button></div>{[["카테고리", ["공지", "요청", "일정", "이슈"]], ["상태", ["미읽음", "중요", "미완료", "완료"]]].map(([title, tags]) => <div key={title as string} className="mt-6 border-t border-slate-100 pt-5"><h3 className="text-sm font-semibold">{title}</h3><div className="mt-3 flex flex-wrap gap-2">{(tags as string[]).map(x => <button key={x} className="rounded-lg bg-slate-100 px-3 py-2 text-xs text-slate-600 hover:bg-blue-50 hover:text-blue-700">{x}</button>)}</div></div>)}<div className="mt-6 border-t border-slate-100 pt-5"><h3 className="text-sm font-semibold">기간</h3><button className="mt-3 h-10 w-full rounded-lg border border-slate-200 text-left text-xs text-slate-400">날짜 선택</button></div></aside><section><div className="relative"><Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-slate-400" /><input autoFocus defaultValue="행사" className="h-13 w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-10 text-sm outline-none focus:border-blue-400" /><X className="absolute right-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" /></div><p className="mt-5 text-sm text-slate-500"><b className="text-slate-700">‘행사’</b> 검색 결과 2건</p><div className="mt-3 rounded-2xl border border-slate-200 bg-white p-5"><span className="rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">요청</span><h2 className="mt-3 font-semibold">행사 부스 운영 인력 확인</h2><p className="mt-1 text-sm text-slate-500">금주 금요일 행사 운영 가능 시간을 확인해 주세요.</p></div></section></div></AppShell>; }
+export default function SearchPage() {
+  return (
+    <AppShell title="검색 및 필터">
+      <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
+        <aside className="rounded-2xl border border-slate-200 bg-white p-5">
+          <div className="flex items-center justify-between">
+            <h2 className="font-bold">상세 필터</h2>
+            <button className="text-xs text-blue-700">초기화</button>
+          </div>
+          {[
+            ["카테고리", ["공지", "요청", "일정", "이슈"]],
+            ["상태", ["미읽음", "중요", "미완료", "완료"]],
+          ].map(([title, tags]) => (
+            <div
+              key={title as string}
+              className="mt-6 border-t border-slate-100 pt-5"
+            >
+              <h3 className="text-sm font-semibold">{title}</h3>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {(tags as string[]).map((x) => (
+                  <button
+                    key={x}
+                    className="rounded-lg bg-slate-100 px-3 py-2 text-xs text-slate-600 hover:bg-blue-50 hover:text-blue-700"
+                  >
+                    {x}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+          <div className="mt-6 border-t border-slate-100 pt-5">
+            <h3 className="text-sm font-semibold">기간</h3>
+            <button className="mt-3 h-10 w-full rounded-lg border border-slate-200 text-left text-xs text-slate-400">
+              날짜 선택
+            </button>
+          </div>
+        </aside>
+        <section>
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-slate-400" />
+            <input
+              autoFocus
+              defaultValue="행사"
+              className="h-13 w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-10 text-sm outline-none focus:border-blue-400"
+            />
+            <X className="absolute right-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+          </div>
+          <p className="mt-5 text-sm text-slate-500">
+            <b className="text-slate-700">‘행사’</b> 검색 결과 2건
+          </p>
+          <div className="mt-3 rounded-2xl border border-slate-200 bg-white p-5">
+            <span className="rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
+              요청
+            </span>
+            <h2 className="mt-3 font-semibold">행사 부스 운영 인력 확인</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              금주 금요일 행사 운영 가능 시간을 확인해 주세요.
+            </p>
+          </div>
+        </section>
+      </div>
+    </AppShell>
+  );
+}
